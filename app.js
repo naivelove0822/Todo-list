@@ -65,10 +65,12 @@ app.get('/todos/:id/edit', (req, res) => {
 
 app.post('/todos/:id/edit', (req, res) => {
   const id = req.params.id
-  const name = req.body.name
+  const { name, isDone } = req.body
+  
   return Todo.findById(id)
     .then(todo => {
       todo.name = name
+      todo.isDone = isDone === 'on' //邏輯運算子 === 的優先度 > = 順序為 isDone === 'on' 後才會執行 todo.isDone = isDone，所以可以把if/else的判斷式縮寫
       return todo.save()
     })
     .then(() => res.redirect(`/todos/${id}`))
